@@ -167,7 +167,7 @@ ghostdriver.Session = function(desiredCapabilities) {
             phantom.setProxy(proxySettings["ip"], proxySettings["port"], proxySettings["proxyType"], proxySettings["user"], proxySettings["password"]);
         }
         if (k.indexOf(_capsPageOnInitialized) === 0) {
-            onInitializedKey = k.substring((_capsPageOnInitialized.length);
+            onInitializedKey = desiredCapabilities[k];
         }
     }
 
