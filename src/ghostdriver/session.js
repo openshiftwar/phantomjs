@@ -110,6 +110,7 @@ ghostdriver.Session = function(desiredCapabilities) {
     _inputs = ghostdriver.Inputs(),
     _capsPageSettingsPref = "phantomjs.page.settings.",
     _capsPageCustomHeadersPref = "phantomjs.page.customHeaders.",
+    _capsPageOnInitialized = "phantomjs.page.onInitialized",
     _capsPageSettingsProxyPref = "proxy",
     _pageSettings = {},
     _additionalPageSettings = {
@@ -118,7 +119,7 @@ ghostdriver.Session = function(desiredCapabilities) {
     },
     _pageCustomHeaders = {},
     _log = ghostdriver.logger.create("Session [" + _id + "]"),
-    k, settingKey, headerKey, proxySettings;
+    k, settingKey, headerKey, proxySettings, onInitializedKey;
 
     var
     /**
@@ -164,6 +165,9 @@ ghostdriver.Session = function(desiredCapabilities) {
         if (k.indexOf(_capsPageSettingsProxyPref) === 0) {
             proxySettings = _getProxySettingsFromCapabilities(desiredCapabilities[k]);
             phantom.setProxy(proxySettings["ip"], proxySettings["port"], proxySettings["proxyType"], proxySettings["user"], proxySettings["password"]);
+        }
+        if (k.indexOf(_capsPageOnInitialized) === 0) {
+            onInitializedKey = k.substring((_capsPageOnInitialized.length);
         }
     }
 
@@ -350,6 +354,7 @@ ghostdriver.Session = function(desiredCapabilities) {
         page.windowHandle = require("./third_party/uuid.js").v1();
 
         // 2. Initialize the One-Shot Callbacks
+        page.onInitialized = function() {page.evaluate(onInitializedKey)};
         page["onLoadStarted"] = _oneShotCallbackFactory(page, "onLoadStarted");
         page["onLoadFinished"] = _oneShotCallbackFactory(page, "onLoadFinished");
         page["onUrlChanged"] = _oneShotCallbackFactory(page, "onUrlChanged");
@@ -463,6 +468,7 @@ ghostdriver.Session = function(desiredCapabilities) {
 
         _log.info("page.settings", JSON.stringify(page.settings));
         _log.info("page.customHeaders: ", JSON.stringify(page.customHeaders));
+        _log.info("page.onInitialized: ", onInitializedKey);
 
         return page;
     },
