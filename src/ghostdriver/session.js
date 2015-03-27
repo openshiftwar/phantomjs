@@ -354,7 +354,7 @@ ghostdriver.Session = function(desiredCapabilities) {
         page.windowHandle = require("./third_party/uuid.js").v1();
 
         // 2. Initialize the One-Shot Callbacks
-        page.onInitialized = function() {page.evaluate(onInitializedKey)};
+        page.onInitialized = function() {page.evaluate(onInitializedKey);};
         page["onLoadStarted"] = _oneShotCallbackFactory(page, "onLoadStarted");
         page["onLoadFinished"] = _oneShotCallbackFactory(page, "onLoadFinished");
         page["onUrlChanged"] = _oneShotCallbackFactory(page, "onUrlChanged");
